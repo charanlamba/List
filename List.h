@@ -2,6 +2,7 @@
 #define LIST_H
 
 #include <iostream>
+#include <iterator>
 
 using namespace std;
 
@@ -21,6 +22,9 @@ class List
 
   public:
     List();
+    List(T *arr);
+
+    ~List();
 
     List& operator=(const List&);
 
@@ -42,22 +46,40 @@ List<T>::List()
 }
 
 template<class T>
-List<T>& List<T>::operator=(const List &someList)
+List<T>::List(T *arr)
+{
+  unsigned i = 0;
+  head = NULL;
+  tail = NULL;
+  _length = 0;
+
+  while((arr + i) != NULL)
+  {
+    List<T>::add(arr[i]);
+    i++;
+  }
+}
+
+template<class T>
+List<T>::~List<T>()
+{
+  while(_length != 0)
+    List<T>::remove();
+}
+
+template<class T>
+List<T>& List<T>::operator=(const List<T> &someList)
 {
   struct node *curr = someList.head;
-  struct node *thisHead = head;
   if(this == &someList)
     return *this;
 
-  while(thisHead != NULL)
-  {
-    remove();
-    thisHead = thisHead->next;
-  }
+  while(_length != 0)
+    List<T>::remove();
 
   while(curr)
   {
-    add(curr->data);
+    List<T>::add(curr->data);
     curr = curr->next;
   }
 
